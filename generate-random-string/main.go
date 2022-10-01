@@ -40,7 +40,7 @@ func GenerteRandomStringV3(n int) string {
 
 const (
 	letterIdxBits = 6 // 因为整个lettersBytes 的长度是52，可以用6位的二进制表示 111111b
-	letterIdxMask = 1 << letterIdxBits
+	letterIdxMask = 1<<letterIdxBits - 1
 	letterIdxMax  = 63 / letterIdxBits
 )
 

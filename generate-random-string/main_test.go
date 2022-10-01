@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestGenerateRandomString(t *testing.T) {
 	res := GenerteRandomStringV1(6)
@@ -63,4 +66,8 @@ func BenchmarkGenerateRandomStringV8(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		GenerteRandomStringV8(6)
 	}
+}
+
+func TestV8(t *testing.T) {
+	fmt.Println(GenerteRandomStringV4(6))
 }
