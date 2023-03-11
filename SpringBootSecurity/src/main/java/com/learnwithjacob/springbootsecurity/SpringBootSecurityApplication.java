@@ -8,10 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SpringBootSecurityApplication {
 
     public static void main(String[] args) {
-        User.builder()
-                .firstName("")
-                .lastName("")
-                .build();
         SpringApplication.run(SpringBootSecurityApplication.class, args);
     }
 }
