@@ -6,7 +6,6 @@ package com.codewithjacob;/*
  *@create $DATE $TIME
  */
 
-import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +18,6 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws LifecycleException {
-        System.out.println("Hello Java Servlet!");
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(8080);
         tomcat.getConnector();
@@ -35,8 +33,9 @@ public class Main {
 
     public static class HelloServlet extends HttpServlet {
         @Override
-        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            resp.getWriter().println("hello world!");
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+                throws ServletException, IOException {
+            resp.getWriter().println("hello servlet!");
         }
     }
 }
