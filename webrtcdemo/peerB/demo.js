@@ -2,70 +2,63 @@ const servers = {
     iceServers: [
         {
             urls: ['stun:stun1.l.google.com:19302'],
-        },
-    ],
-    iceCandidatePoolSize: 10,
-};
+        }
+    ]
+}
 
-// Global State
-const pc = new RTCPeerConnection(servers);
+
+// TURN ... NAT
+const rtcPeerConnection = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
 
-// HTML elements
 const webcamButton = document.getElementById('webcamButton');
 const webcamVideo = document.getElementById('webcamVideo');
 const remoteVideo = document.getElementById('remoteVideo');
-const hangupButton = document.getElementById('hangupButton');
+const respBtn = document.getElementById("responseButton")
+const answerBtn = document.getElementById('answerBtn');
 
-// 1. Setup media sources
+// 打开摄像头，获取视频流
 webcamButton.onclick = async () => {
-    localStream = await navigator.mediaDevices.getUserMedia({video: true})
-    remoteStream = new MediaStream()
+    localStream = await navigator.mediaDevices.getUserMedia({video: true});
+    remoteStream = new MediaStream();
 
-    localStream.getTracks().forEach(track => {
-        console.log("local stream get track")
-        pc.addTrack(track, localStream)
-    })
+    localStream.getTracks().forEach((track) => {
+        rtcPeerConnection.addTrack(track, localStream);
+    });
 
-    pc.ontrack = (e) => {
+    rtcPeerConnection.ontrack = (e) => {
         e.streams[0].getTracks().forEach(track => {
-            console.log("pc on track: ", track)
+            console.log("track: ", track)
             remoteStream.addTrack(track)
-        });
+        })
     }
 
     webcamVideo.srcObject = localStream
     remoteVideo.srcObject = remoteStream
 }
 
-// export let getAnswerSuccessfully;
-
-const answerBtn = document.getElementById('answerBtn');
-console.log("answerBtn = ", answerBtn);
+// 呼叫对方
+// offer RTC 中表示呼叫对方
 answerBtn.onclick = async () => {
-    const offer = JSON.parse(localStorage.getItem("offer"))
-    console.log(offer)
-    const answerCandidates = [];
-    pc.onicecandidate = (event) => {
+    const answerCandidates = []
+    rtcPeerConnection.onicecandidate = (event) => {
         if (event.candidate) {
-            answerCandidates.push(event.candidate);
-            localStorage.setItem("answerCandidates", JSON.stringify(answerCandidates))
-            console.log("answer candidates: ", localStorage.getItem("answerCandidates"))
+            answerCandidates.push(event.candidate)
+            localStorage.setItem("answerCandidates", JSON.stringify(answerCandidates));
         }
-
     }
 
-    await pc.setRemoteDescription(new RTCSessionDescription(offer));
+    // 获取到对方发出呼叫的 Description，然后进行响应
+    const offer = JSON.parse(localStorage.getItem("offer"));
+    await rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(offer));
 
-    const answerDescription = await pc.createAnswer();
-    await pc.setLocalDescription(answerDescription);
-    console.log("set answer local description successfully! ", answerDescription);
-    // getAnswerSuccessfully(answerDescription)
-    localStorage.setItem("answer", JSON.stringify(answerDescription))
+    const answer = await rtcPeerConnection.createAnswer();
+    await rtcPeerConnection.setLocalDescription(answer);
 
-    const offerCandidates = JSON.parse(localStorage.getItem("offerCandidates"))
-    console.log(offerCandidates)
-    offerCandidates.forEach(offer => pc.addIceCandidate(new RTCIceCandidate(offer)))
+    localStorage.setItem("answer", JSON.stringify(answer));
 
+    const offerCandidates = JSON.parse(localStorage.getItem("offerCandidates"));
+    console.log(offerCandidates);
+    offerCandidates.forEach(offer => rtcPeerConnection.addIceCandidate(offer));
 }

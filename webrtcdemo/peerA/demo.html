@@ -9,7 +9,19 @@
 <body>
 <h2>Start your Webcam</h2>
 <div class="videos">
-      <span>
+    <label for="selectVideo">选择视频输入源</label>
+    <select name="selectVideos" id="selectVideo">
+
+    </select>
+    <br>
+    <label for="selectAudio">选择音频输入源</label>
+    <select name="selectAudio" id="selectAudio">
+
+    </select>
+
+    <br>
+
+    <span>
         <h3>Local Stream</h3>
         <video id="webcamVideo" autoplay playsinline></video>
       </span>
@@ -17,8 +29,6 @@
         <h3>Remote Stream</h3>
         <video id="remoteVideo" autoplay playsinline></video>
       </span>
-
-
 </div>
 
 <button id="webcamButton">Start webcam</button>
