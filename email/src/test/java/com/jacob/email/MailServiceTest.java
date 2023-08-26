@@ -7,8 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /*
  *@title MailServiceTest
  *@description
